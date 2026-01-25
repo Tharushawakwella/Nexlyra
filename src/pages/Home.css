@@ -1,86 +1,62 @@
-/* Home.css - Nexlyra Modern Theme */
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+/* Home.css - Original Design Restored */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
 
 :root {
-    --bg-white: #ffffff;
-    --text-dark: #1a1a2e;
-    --text-light: #6b7280;
+    --bg-dark: #0f172a;
+    --bg-darker: #020617;
+    --bg-light: #ffffff;
+    --text-main: #e2e8f0;
+    --text-muted: #94a3b8;
     --accent-purple: #a855f7;
     --accent-pink: #ec4899;
+    --card-bg: #1e293b;
     --coin-gold: #f59e0b;
 }
 
 body {
     margin: 0;
     font-family: 'Poppins', sans-serif;
-    background-color: var(--bg-white);
-    color: var(--text-dark);
     overflow-x: hidden;
 }
 
-/* Navbar */
-.navbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1.5rem 5%;
-    background: rgba(255, 255, 255, 0.8);
-    backdrop-filter: blur(10px);
-    position: fixed;
-    width: 100%;
-    top: 0;
-    z-index: 100;
-    box-sizing: border-box;
+.home-container {
+    position: relative;
+    overflow: hidden;
 }
 
-.logo {
-    font-size: 1.5rem;
+/* --- COMMON SECTION STYLES --- */
+.section {
+    padding: 100px 10%;
+    position: relative;
+    z-index: 10;
+}
+
+.section-header {
+    text-align: center;
+    margin-bottom: 4rem;
+}
+
+.section-header h2 {
+    font-size: 2.5rem;
     font-weight: 700;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
+    margin-bottom: 1rem;
+    color: var(--text-main);
 }
 
-.logo-icon {
-    color: var(--accent-pink);
+.section-header p {
+    color: var(--text-muted);
 }
 
-.nav-links {
-    display: flex;
-    gap: 2rem;
-    align-items: center;
-}
-
-.nav-links a {
-    text-decoration: none;
-    color: var(--text-dark);
-    font-weight: 600;
-    font-size: 0.9rem;
-}
-
-.btn-get-started {
-    background: var(--text-dark);
-    color: white;
-    padding: 0.8rem 1.5rem;
-    border-radius: 30px;
-    font-weight: 600;
-    border: none;
-    cursor: pointer;
-    transition: 0.3s;
-}
-
-.btn-get-started:hover {
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-}
-
-/* Hero Section */
+/* --- 1. HERO SECTION (RESTORED ORIGINAL DESIGN) --- */
 .hero-section {
     display: flex;
     align-items: center;
     justify-content: space-between;
     min-height: 100vh;
     padding: 0 5%;
-    padding-top: 80px; /* For navbar space */
+    padding-top: 80px;
+    background-color: var(--bg-light); 
+    color: #1a1a2e;
     position: relative;
 }
 
@@ -88,6 +64,7 @@ body {
     flex: 1;
     max-width: 600px;
     z-index: 2;
+    padding-left: 2rem;
 }
 
 .hero-title {
@@ -99,12 +76,44 @@ body {
 
 .hero-subtitle {
     font-size: 1.1rem;
-    color: var(--text-light);
+    color: #64748b;
+    margin-bottom: 2rem;
     line-height: 1.6;
-    margin-bottom: 2.5rem;
 }
 
-/* --- 3D Illustration & Animation --- */
+.hero-buttons {
+    display: flex;
+    gap: 1rem;
+}
+
+.btn-get-started {
+    background: #1a1a2e;
+    color: white;
+    padding: 0.8rem 1.8rem;
+    border-radius: 30px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn-outline {
+    background: transparent;
+    border: 2px solid #1a1a2e;
+    color: #1a1a2e;
+    padding: 0.8rem 1.8rem;
+    border-radius: 30px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn-get-started:hover, .btn-outline:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+/* --- HERO VISUAL & ANIMATION (Original Look) --- */
 .hero-visual {
     flex: 1;
     height: 600px;
@@ -112,14 +121,15 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    /* Abstract background shapes */
+    
+    /* මේ කොටස තමයි මුලින් තිබ්බ ලස්සන හැඩය (Blob) */
     background-image: 
         linear-gradient(135deg, rgba(168, 85, 247, 0.1) 0%, rgba(236, 72, 153, 0.1) 100%),
         radial-gradient(circle at 20% 80%, rgba(168, 85, 247, 0.4) 0%, transparent 50%);
     border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
 }
 
-/* The Glowing Path */
+/* Glowing Path */
 .glowing-path {
     position: absolute;
     width: 120%;
@@ -131,7 +141,7 @@ body {
     animation: pulsePath 4s ease-in-out infinite alternate;
 }
 
-/* The Rolling Coin Animation */
+/* Coin Animation */
 .coin {
     position: absolute;
     width: 60px;
@@ -141,51 +151,187 @@ body {
     box-shadow: 
         inset 0 0 10px rgba(255,255,255,0.5),
         0 4px 15px rgba(245, 158, 11, 0.5);
-    /* Initial position on the path */
+    /* Initial position */
     top: 40%;
     left: 20%;
     animation: moveAndRoll 6s ease-in-out infinite;
 }
 
-/* Keyframes for Animations */
+/* Keyframes */
 @keyframes pulsePath {
     0% { opacity: 0.4; filter: blur(30px); }
     100% { opacity: 0.8; filter: blur(40px); }
 }
 
 @keyframes moveAndRoll {
-    0% {
-        transform: translate(0, 0) rotate(0deg);
-        top: 40%;
-        left: 20%;
-    }
-    50% {
-        transform: translate(200px, 120px) rotate(360deg);
-        top: 50%;
-        left: 50%;
-    }
-    100% {
-        transform: translate(0, 0) rotate(720deg);
-        top: 40%;
-        left: 20%;
-    }
+    0% { transform: translate(0, 0) rotate(0deg); top: 40%; left: 20%; }
+    50% { transform: translate(200px, 120px) rotate(360deg); top: 50%; left: 50%; }
+    100% { transform: translate(0, 0) rotate(720deg); top: 40%; left: 20%; }
 }
 
-/* Responsive Design */
+/* --- 2. ABOUT SECTION --- */
+.about-section {
+    background-color: var(--bg-light);
+    color: #1a1a2e;
+    padding-top: 50px;
+}
+.about-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 4rem;
+}
+.about-text { flex: 1; }
+.about-text h2 { font-size: 2.5rem; margin-bottom: 1.5rem; color: #1a1a2e; } 
+.about-text p { margin-bottom: 1rem; color: #475569; line-height: 1.7; }
+
+.about-stats {
+    display: flex;
+    gap: 2rem;
+}
+.stat-box {
+    text-align: center;
+    padding: 1.5rem;
+    background: white;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+    border-radius: 15px;
+    min-width: 100px;
+}
+.stat-box h3 { font-size: 2rem; color: var(--accent-purple); margin: 0; }
+.stat-box p { font-size: 0.9rem; color: #64748b; margin: 0.5rem 0 0; }
+
+/* --- 3. SERVICES SECTION --- */
+.services-section {
+    background-color: var(--bg-dark);
+    color: white;
+}
+.services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+}
+.service-card {
+    background: var(--card-bg);
+    padding: 2rem;
+    border-radius: 20px;
+    border: 1px solid rgba(255,255,255,0.05);
+    transition: 0.3s;
+}
+.service-card:hover { transform: translateY(-10px); border-color: var(--accent-pink); }
+.icon-box {
+    width: 50px; height: 50px;
+    background: rgba(168, 85, 247, 0.1);
+    border-radius: 12px;
+    display: flex; justify-content: center; align-items: center;
+    margin-bottom: 1rem; color: var(--accent-purple);
+}
+.service-card h3 { margin-bottom: 0.5rem; color: white; }
+.service-card p { color: var(--text-muted); font-size: 0.9rem; line-height: 1.6; }
+
+/* --- 4. PORTFOLIO SECTION --- */
+.portfolio-section {
+    background-color: var(--bg-darker);
+    color: white;
+}
+.portfolio-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2.5rem;
+}
+.project-card {
+    background: var(--card-bg);
+    border-radius: 20px;
+    overflow: hidden;
+    transition: 0.3s;
+}
+.project-card:hover { transform: translateY(-5px); box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+.project-image {
+    height: 200px;
+    background-size: cover;
+    background-position: center;
+}
+.project-info { padding: 1.5rem; }
+.category { 
+    color: var(--accent-pink); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; 
+}
+.project-info h3 { margin: 0.5rem 0; font-size: 1.3rem; color: white; }
+.project-info p { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.5rem; }
+.project-links { display: flex; gap: 1rem; }
+.btn-sm {
+    display: flex; align-items: center; gap: 5px;
+    padding: 0.5rem 1rem;
+    background: rgba(255,255,255,0.1);
+    color: white; border: none; border-radius: 8px; cursor: pointer; transition: 0.2s;
+}
+.btn-sm:hover { background: var(--accent-purple); }
+
+/* --- 5. CONTACT SECTION --- */
+.contact-section {
+    background-color: var(--bg-dark);
+    color: white;
+}
+.contact-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4rem;
+    align-items: flex-start;
+}
+.contact-info { flex: 1; min-width: 300px; }
+.contact-info h2 { font-size: 2.5rem; margin-bottom: 1rem; color: white;}
+.info-item {
+    display: flex; align-items: center; gap: 15px;
+    margin-top: 1.5rem; font-size: 1.1rem; color: var(--text-muted);
+}
+.c-icon { color: var(--accent-purple); }
+
+.contact-form {
+    flex: 1; min-width: 300px;
+    background: var(--card-bg);
+    padding: 2.5rem;
+    border-radius: 20px;
+    border: 1px solid rgba(255,255,255,0.05);
+}
+.form-group { margin-bottom: 1.5rem; }
+.form-group label { display: block; margin-bottom: 0.5rem; color: var(--text-muted); font-size: 0.9rem; }
+.form-group input, .form-group textarea {
+    width: 100%; padding: 0.8rem;
+    background: rgba(0,0,0,0.2);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 8px;
+    color: white; font-family: inherit;
+    box-sizing: border-box; 
+}
+.form-group input:focus, .form-group textarea:focus {
+    outline: none; border-color: var(--accent-purple);
+}
+.btn-submit {
+    width: 100%; padding: 1rem;
+    background: linear-gradient(135deg, var(--accent-purple), var(--accent-pink));
+    color: white; border: none; border-radius: 10px;
+    font-weight: 600; cursor: pointer;
+    display: flex; justify-content: center; align-items: center; gap: 10px;
+    transition: 0.3s;
+}
+.btn-submit:hover { opacity: 0.9; transform: translateY(-2px); }
+
+/* --- Ripple & Responsive --- */
+.ripple-effect {
+    position: absolute; border-radius: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    background: radial-gradient(circle, rgba(168, 85, 247, 0.4) 0%, transparent 80%);
+    animation: ripple-animation 0.8s linear forwards;
+}
+@keyframes ripple-animation {
+    0% { width: 0; height: 0; opacity: 0.8; }
+    100% { width: 600px; height: 600px; opacity: 0; }
+}
+
 @media (max-width: 768px) {
-    .hero-section {
-        flex-direction: column;
-        text-align: center;
-        padding-top: 120px;
-    }
-    .hero-content {
-        margin-bottom: 3rem;
-    }
-    .hero-visual {
-        width: 100%;
-        height: 400px;
-    }
-    .nav-links {
-        display: none; /* Simplify navbar on mobile */
-    }
+    .hero-section { flex-direction: column; text-align: center; padding-top: 120px; }
+    .hero-buttons { justify-content: center; }
+    .hero-visual { width: 100%; height: 350px; margin-top: 2rem;}
+    .about-content, .contact-wrapper { flex-direction: column; gap: 2rem; }
+    .about-stats { justify-content: center; }
+    .hero-title { font-size: 2.5rem; }
 }

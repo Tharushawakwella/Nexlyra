@@ -2,6 +2,7 @@
 :root {
     --text-dark: #1a1a2e;
     --accent-pink: #ec4899;
+    --glass-bg: rgba(255, 255, 255, 0.95);
 }
 
 .navbar {
@@ -9,8 +10,7 @@
     justify-content: space-between;
     align-items: center;
     padding: 1rem 5%;
-    background: rgba(255, 255, 255, 0.85); /* Glass effect */
-    backdrop-filter: blur(12px);
+    background: rgba(255, 255, 255, 0.9); /* පසුබිම තවත් ටිකක් තද කළා */
     border-bottom: 1px solid rgba(0,0,0,0.05);
     position: fixed;
     width: 100%;
@@ -29,8 +29,10 @@
     gap: 0.5rem;
     color: var(--text-dark);
     font-family: 'Poppins', sans-serif;
+    z-index: 1001;
 }
 
+/* Desktop View සඳහා Nav Links */
 .nav-links {
     display: flex;
     gap: 2rem;
@@ -58,17 +60,66 @@
     font-weight: 600;
     border: none;
     cursor: pointer;
-    transition: transform 0.2s, box-shadow 0.2s;
+    transition: transform 0.2s;
 }
 
-.btn-nav-cta:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+/* Mobile Menu Icon (Desktop එකේදී හංගනවා) */
+.mobile-menu-icon {
+    display: none;
+    cursor: pointer;
+    color: var(--text-dark);
+    z-index: 2000; /* Icon එක හැමෝටම වඩා උඩින් */
 }
 
-/* Mobile Responsive */
+/* Navbar.css පහළම කොටස (Mobile Responsive) */
+
 @media (max-width: 768px) {
+    /* 1. මෙනු එකේ අයිකන් එක පෙන්වීම */
+    .mobile-menu-icon {
+        display: block;
+        cursor: pointer;
+        z-index: 2000;
+        color: #1a1a2e;
+    }
+
+    /* 2. මෙනු ලිස්ට් එක (Desktop එකේ තියෙන විදිහ වෙනස් කිරීම) */
     .nav-links {
-        display: none; /* Mobile Menu eka passata hadamu */
+        /* මුලින්ම මෙය සඟවා තබමු */
+        display: none;
+        
+        /* මෙනු එකේ පිහිටීම */
+        position: fixed;
+        top: 80px; /* Navbar එකට පහළින් පටන් ගන්න */
+        left: 0;
+        width: 100%;
+        height: calc(100vh - 80px); /* ඉතිරි සම්පූර්ණ උස */
+        background-color: #ffffff; /* සුදු පාට පසුබිම */
+        
+        /* ඇතුළත දේවල් පෙළගැස්වීම */
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        padding-top: 50px;
+        gap: 2rem;
+        z-index: 1500;
+        border-top: 1px solid #eee;
+    }
+
+    /* 3. මෙනු එක Active වුනාම (ඉරි 3 එබුවම) පෙන්වන විදිහ */
+    .nav-links.active {
+        display: flex; /* කෙලින්ම මතු වේ */
+    }
+
+    /* 4. අකුරු වල ප්‍රමාණය */
+    .nav-links a {
+        font-size: 1.2rem;
+        color: #333;
+        width: 100%;
+        text-align: center;
+        padding: 15px 0;
+    }
+
+    .nav-links button {
+        width: 80%;
     }
 }
