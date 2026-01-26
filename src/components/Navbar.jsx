@@ -1,46 +1,88 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
 import './Navbar.css';
-import { Code2, Menu, X } from 'lucide-react'; // Menu සහ X අයිකන import කරන්න
+import { Link, useNavigate } from 'react-router-dom';
+import { User, LogOut, LayoutDashboard } from 'lucide-react'; // Admin Icon එකට LayoutDashboard ගත්තා
 
 const Navbar = () => {
-    // Menu එක Open ද Close ද කියලා බලන්න State එකක්
-    const [isOpen, setIsOpen] = useState(false);
+    const navigate = useNavigate();
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [userRole, setUserRole] = useState(''); // 1. Role එක තියාගන්න State එකක්
 
-    // Menu එක Open/Close කරන Function එක
-    const toggleMenu = () => {
-        setIsOpen(!isOpen);
+    // Page එක Load වෙද්දී User සහ Role එක බලනවා
+    useEffect(() => {
+        const authStatus = localStorage.getItem('isAuthenticated');
+        const role = localStorage.getItem('userRole'); // 2. LocalStorage එකෙන් Role එක ගන්නවා
+
+        if (authStatus === 'true') {
+            setIsLoggedIn(true);
+            setUserRole(role); // State එක Update කරනවා
+        }
+    }, []);
+
+    // Logout Function
+    const handleLogout = () => {
+        if(window.confirm("Do you want to logout?")) {
+            localStorage.removeItem('isAuthenticated');
+            localStorage.removeItem('userEmail');
+            localStorage.removeItem('userRole'); // Role එකත් Clear කරනවා
+            
+            setIsLoggedIn(false);
+            setUserRole('');
+            navigate('/login');
+        }
     };
 
-    // Link එකක් Click කළාම Menu එක ඉබේම වැහෙන්න ඕනේ
-    const closeMenu = () => {
-        setIsOpen(false);
+    // Contact Button Logic
+    const handleContactClick = (e) => {
+        e.preventDefault();
+        if (isLoggedIn) {
+            const contactSection = document.getElementById('contact');
+            if (contactSection) contactSection.scrollIntoView({ behavior: 'smooth' });
+        } else {
+            alert("Please Sign In to contact us!");
+            navigate('/login');
+        }
     };
 
     return (
         <nav className="navbar">
-            <div className="logo">
-                <Code2 className="logo-icon" color="#ec4899" size={28} />
-                <span>Nexlyra Digital</span>
-            </div>
+            <div className="logo">Nexlyra<span>Digital</span></div>
+            
+            <ul className="nav-links">
+                <li><Link to="/">Home</Link></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#services">Services</a></li>
+                <li><a href="#portfolio">Portfolio</a></li>
+                <li><a href="#contact" onClick={handleContactClick}>Contact</a></li>
+            </ul>
+            
+            <div className="nav-buttons">
+                {isLoggedIn ? (
+                    // --- Log වෙලා නම් පෙන්වන Menu එක ---
+                    <div className="logged-in-menu">
+                        
+                        {/* 3. මෙන්න Admin Logic එක: Role එක ADMIN නම් විතරක් මේ බටන් එක පෙන්වනවා */}
+                        {userRole === 'ADMIN' && (
+                            <Link to="/admin" className="profile-link" style={{ color: '#ec4899', fontWeight: 'bold', marginRight: '10px' }}>
+                                <LayoutDashboard size={18} /> <span>Admin Board</span>
+                            </Link>
+                        )}
 
-            {/* Mobile Menu Icon එක (Phone එකේදී විතරක් වැඩ) */}
-            <div className="mobile-menu-icon" onClick={toggleMenu}>
-                {isOpen ? <X size={30} /> : <Menu size={30} />}
+                        <Link to="/profile" className="profile-link">
+                            <User size={18} /> <span>Profile</span>
+                        </Link>
+                        
+                        <button onClick={handleLogout} className="btn-logout" title="Logout">
+                            <LogOut size={18} />
+                        </button>
+                    </div>
+                ) : (
+                    // --- Log වෙලා නැත්නම් ---
+                    <Link to="/login">
+                        <button className="btn-nav-cta">Sign In</button>
+                    </Link>
+                )}
             </div>
-
-            {/* Nav Links Container */}
-            <div className={`nav-links ${isOpen ? 'active' : ''}`}>
-    <a href="/#home" onClick={closeMenu}>Home</a>
-    <a href="/#about" onClick={closeMenu}>About</a>
-    <a href="/#services" onClick={closeMenu}>Services</a>
-    <a href="/#portfolio" onClick={closeMenu}>Portfolio</a>
-    <a href="/#contact" onClick={closeMenu}>Contact</a>
-    
-    <Link to="/login" onClick={closeMenu}>
-        <button className="btn-nav-cta">Sign In</button>
-    </Link>
-</div>
         </nav>
     );
 };

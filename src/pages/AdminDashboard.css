@@ -1,0 +1,131 @@
+/* src/pages/AdminDashboard.css */
+
+/* Main Container - මුළු පිටුවම ලා අළු පාටක් */
+.admin-container {
+    padding-top: 100px;
+    min-height: 100vh;
+    display: flex;
+    background-color: #f1f5f9; /* Light Gray Background */
+    color: #334155; /* Dark Text */
+}
+
+/* 1. Form Styles - සුදු පාට පෙට්ටියක් */
+.admin-form {
+    background: #ffffff;
+    padding: 25px;
+    border-radius: 12px;
+    margin-bottom: 30px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    border: 1px solid #e2e8f0; /* ලා පාට බෝඩර් */
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+.admin-form input, 
+.admin-form textarea {
+    flex: 1;
+    min-width: 250px;
+    padding: 12px;
+    background: #f8fafc; /* Input එක ඇතුල ලා පාට */
+    border: 1px solid #cbd5e1;
+    color: #1e293b; /* Type කරන අකුරු කළු */
+    border-radius: 8px;
+    outline: none;
+    font-size: 0.9rem;
+}
+
+.admin-form input:focus,
+.admin-form textarea:focus {
+    border-color: #a855f7;
+    background: #ffffff;
+    box-shadow: 0 0 0 2px rgba(168, 85, 247, 0.1);
+}
+
+.btn-add {
+    background: #a855f7;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+}
+
+.btn-add:hover {
+    background: #9333ea;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(168, 85, 247, 0.2);
+}
+
+/* 2. Grid & Card Styles */
+.grid-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.admin-card {
+    background: #ffffff; /* සුදු පාට කාඩ් */
+    border: 1px solid #e2e8f0;
+    padding: 20px;
+    border-radius: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 15px;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+}
+
+.admin-card:hover {
+    border-color: #a855f7;
+    transform: translateY(-3px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+}
+
+.admin-card h3 {
+    margin: 0 0 5px 0;
+    font-size: 1.1rem;
+    color: #1e293b; /* මාතෘකාව තද කළු */
+}
+
+.admin-card p {
+    margin: 0;
+    font-size: 0.9rem;
+    color: #64748b; /* විස්තරය අළු පාට */
+    line-height: 1.4;
+}
+
+/* Delete Button */
+.btn-delete {
+    background: #fee2e2; /* ලා රතු */
+    color: #ef4444;
+    border: none;
+    padding: 8px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.btn-delete:hover {
+    background: #ef4444;
+    color: white;
+}
+
+/* Category Tag */
+.admin-card span {
+    display: inline-block;
+    margin-top: 8px;
+    font-size: 0.75rem;
+    padding: 4px 12px;
+    background: #f3e8ff; /* ලා දම් */
+    color: #9333ea;
+    border-radius: 15px;
+    font-weight: 600;
+}
