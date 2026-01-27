@@ -11,7 +11,7 @@ const Home = () => {
     const navigate = useNavigate();
     const [ripples, setRipples] = useState([]);
 
-    // --- 1. DEFAULT DATA (Backend එක හිස් නම් පෙන්වන්න) ---
+    // --- 1. DEFAULT DATA  ---
     const defaultServices = [
         { iconName: "Layout", title: "Full-Stack Web Apps", description: "Building powerful web applications like 'Vehix' using React and Spring Boot." },
         { iconName: "Server", title: "Enterprise Backend", description: "Scalable backend systems designed with Java Spring Boot for secure data management." },
@@ -27,25 +27,25 @@ const Home = () => {
         { title: "AI Terminal Companion", category: "Artificial Intelligence", imageUrl: "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?auto=format&fit=crop&q=80&w=600", description: "A Linux-based terminal assistant leveraging local LLMs (Ollama)." }
     ];
 
-    // --- 2. STATES (දැන් අපි Data තියාගන්නේ State වල) ---
+    // --- 2. STATES  ---
     const [services, setServices] = useState(defaultServices);
     const [projects, setProjects] = useState(defaultProjects);
 
     // Contact Form State
     const [contactData, setContactData] = useState({ name: '', email: '', message: '' });
 
-    // --- 3. DATA FETCHING (Backend එකෙන් දත්ත ගැනීම) ---
+    // --- 3. DATA FETCHING ---
     useEffect(() => {
         const fetchData = async () => {
             try {
-                // Services ගේනවා
-                const srvRes = await axios.get("http://localhost:8080/api/admin/services");
+                // Services 
+                const srvRes = await axios.get("https://nexlyra.onrender.com/api/admin/services");
                 if (srvRes.data.length > 0) {
-                    setServices(srvRes.data); // Database එකේ තිබුණොත් විතරක් Update කරනවා
+                    setServices(srvRes.data); // Database Update 
                 }
 
-                // Projects ගේනවා
-                const prjRes = await axios.get("http://localhost:8080/api/admin/projects");
+                // Projects 
+                const prjRes = await axios.get("https://nexlyra.onrender.com/api/admin/projects");
                 if (prjRes.data.length > 0) {
                     setProjects(prjRes.data);
                 }
@@ -56,7 +56,7 @@ const Home = () => {
         fetchData();
     }, []);
 
-    // --- HELPER: ICON MAPPER (Database එකෙන් එන නම Icon එකට හරවන්න) ---
+    // --- HELPER: ICON MAPPER  ---
     const getIcon = (iconName) => {
         const icons = { Layout, Server, Database, LineChart, Code, ShieldCheck };
         const IconComponent = icons[iconName] || Layout; // Default Icon
@@ -78,7 +78,7 @@ const Home = () => {
         }
 
         try {
-            await axios.post("http://localhost:8080/api/contact/send", contactData);
+            await axios.post("https://nexlyra.onrender.com/api/contact/send", contactData);
             alert("Message Sent Successfully!");
             setContactData({ name: '', email: '', message: '' });
         } catch (error) {
@@ -110,7 +110,7 @@ const Home = () => {
     return (
         <div className="home-container" onClick={createRipple}>
             
-            {/* HERO SECTION (කිසිම වෙනසක් නෑ) */}
+            {/* HERO SECTION  */}
             <header className="hero-section" id="home">
                 <div className="hero-content">
                     <h1 className="hero-title">Premium Web <br/> Engineering & <br/> <span style={{color: '#a855f7'}}>Data Insights.</span></h1>
@@ -126,7 +126,7 @@ const Home = () => {
                 </div>
             </header>
 
-            {/* ABOUT SECTION (කිසිම වෙනසක් නෑ) */}
+            {/* ABOUT SECTION */}
             <section className="section about-section" id="about">
                 <div className="about-content">
                     <div className="about-text">
@@ -142,14 +142,14 @@ const Home = () => {
                 </div>
             </section>
 
-            {/* SERVICES SECTION (DYNAMIC කළා) */}
+            {/* SERVICES SECTION (DYNAMIC ) */}
             <section className="section services-section" id="services">
                 <div className="section-header"><h2>Our <span style={{color: '#ec4899'}}>Services</span></h2><p>Comprehensive digital solutions tailored to elevate your business.</p></div>
                 <div className="services-grid">
-                    {/* මෙතන දැන් services State එක Map කරනවා */}
+                    {/*  services State  Map  */}
                     {services.map((service, index) => (
                         <div className="service-card" key={service.id || index}>
-                            {/* Icon එක Backend එකෙන් එන නමට අනුව ගන්නවා */}
+                            {/* Icon Backend */}
                             <div className="icon-box">
                                 {service.icon || getIcon(service.iconName)}
                             </div>
@@ -160,14 +160,14 @@ const Home = () => {
                 </div>
             </section>
 
-            {/* PORTFOLIO SECTION (DYNAMIC කළා) */}
+            {/* PORTFOLIO SECTION (DYNAMIC ) */}
             <section className="section portfolio-section" id="portfolio">
                 <div className="section-header"><h2>Featured <span style={{color: '#a855f7'}}>Projects</span></h2><p>A glimpse into our recent technical endeavors.</p></div>
                 <div className="portfolio-grid">
-                    {/* මෙතන දැන් projects State එක Map කරනවා */}
+                    {/*  projects State Map */}
                     {projects.map((project, index) => (
                         <div className="project-card" key={project.id || index}>
-                            {/* Backend එකේ තියෙන්නේ imageUrl, Frontend එකේ image. දෙකම වැඩ කරන විදිහට දැම්මා */}
+                            {/* Backend  imageUrl, Frontend image.*/}
                             <div className="project-image" style={{backgroundImage: `url(${project.imageUrl || project.image})`}}></div>
                             <div className="project-info">
                                 <span className="category">{project.category}</span>
@@ -183,7 +183,7 @@ const Home = () => {
                 </div>
             </section>
 
-            {/* CONTACT SECTION (මේක ඔයා කලින් එවපු විදිහමයි) */}
+            {/* CONTACT SECTION  */}
             <section className="section contact-section" id="contact">
                 <div className="contact-wrapper">
                     <div className="contact-info">

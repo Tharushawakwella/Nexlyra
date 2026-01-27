@@ -19,12 +19,12 @@ const Login = () => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
-    // Button එක ඔබනකොට වැඩ කරන Function එක
+   
     const handleAuth = async (e) => {
         e.preventDefault();
         
         const endpoint = isLogin ? "login" : "signup";
-        const url = `http://localhost:8080/api/auth/${endpoint}`;
+        const url = `https://nexlyra.onrender.com/api/auth/${endpoint}`;
 
         console.log("Sending data to:", url);
 
@@ -34,35 +34,34 @@ const Login = () => {
                 withCredentials: true 
             });
             
-            // --- මෙතන තමයි වෙනස් කළේ (Role Logic) ---
+            
             if (isLogin) {
-                // Backend එකෙන් දැන් එන්නේ JSON Object එකක් (message, role, email)
-                // ඒ නිසා අපි check කරන්නේ response.data.message
+                
                 if (response.data.message === "Login Successful!") {
                     
-                    // 1. User ලොග් වුණා කියලා Save කරගන්නවා
+                    
                     localStorage.setItem('isAuthenticated', 'true');
                     
-                    // 2. Profile එකේ පෙන්නන්න Email එකත් Save කරගන්නවා
+                    
                     localStorage.setItem('userEmail', response.data.email);
 
-                    // 3. වැදගත්ම දේ: User Role එක (ADMIN ද USER ද) Save කරගන්නවා
+                   
                     localStorage.setItem('userRole', response.data.role);
 
                     alert("Welcome Back! Redirecting to Home...");
-                    navigate('/'); // Home page එකට යවනවා
+                    navigate('/'); 
                     
-                    // 4. Navbar එක Update වෙන්න Page එක Reload කරනවා
+                   
                     window.location.reload(); 
                 } else {
-                    // වෙන මොනවා හරි අවුලක් නම්
+                
                     alert(response.data.message || "Login Failed"); 
                 }
             } else {
-                // Sign Up නම් Backend එකෙන් තාම එන්නේ String එකක්
+                
                 if (response.data === "User registered successfully!") {
                     alert("Registration Successful! Please Sign In.");
-                    setIsLogin(true); // කෙලින්ම Sign In ෆෝම් එකට මාරු කරනවා
+                    setIsLogin(true); 
                     setFormData({ ...formData, password: '' });
                 } else {
                     alert(response.data);
@@ -72,7 +71,7 @@ const Login = () => {
 
         } catch (error) {
             console.error("Error Details:", error);
-            // Backend එකෙන් 401 Error (Invalid Credentials) ආවොත් ඒක පෙන්නන්න
+            
             if (error.response && error.response.data) {
                 alert(error.response.data); 
             } else {

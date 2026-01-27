@@ -1,19 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { User, Mail, Shield } from 'lucide-react';
-import './Home.css'; // Home එකේ Style ම ගමු (Dark Theme එකට)
+import './Home.css';
 
 const Profile = () => {
     const navigate = useNavigate();
     const [email, setEmail] = useState('');
 
     useEffect(() => {
-        // Log වෙලා නැත්නම් එළියට දානවා
+        
         const auth = localStorage.getItem('isAuthenticated');
         if (!auth) {
             navigate('/login');
         } else {
-            // Save කරපු Email එක ගන්නවා
             setEmail(localStorage.getItem('userEmail') || 'User');
         }
     }, [navigate]);
