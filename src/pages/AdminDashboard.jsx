@@ -18,44 +18,55 @@ const AdminDashboard = () => {
     const [newService, setNewService] = useState({ title: '', description: '', iconName: 'Layout' });
     const [newProject, setNewProject] = useState({ title: '', category: '', description: '', imageUrl: '' });
 
-    // --- SECURITY CHECK (වැදගත්ම වෙනස මෙතන) ---
+    // --- SECURITY CHECK ---
     useEffect(() => {
         const auth = localStorage.getItem('isAuthenticated');
-        const role = localStorage.getItem('userRole'); // Role එක ගන්නවා
+        const role = localStorage.getItem('userRole');
 
-        // Log වෙලා නැත්නම් හෝ Role එක ADMIN නෙවෙයි නම් එළියට දානවා
         if (!auth || role !== 'ADMIN') { 
             alert("Access Denied! Admins Only.");
             navigate('/login'); 
         } else { 
-            fetchAllData(); // ඇඩ්මින් නම් විතරක් ඩේටා ටික ගේනවා
+            fetchAllData();
         }
     }, [navigate]);
 
+    // --- UPDATED DATA FETCHING (වැදගත්ම වෙනස මෙතන) ---
+    // එක API එකක් ෆේල් වුණත් අනිත් ඒවා ලෝඩ් වෙන විදිහට හැදුවා
     const fetchAllData = async () => {
+        // 1. Messages ගේනවා
         try {
             const msgRes = await axios.get("http://localhost:8080/api/contact/all");
             setMessages(msgRes.data);
-            
+        } catch (error) {
+            console.error("Error fetching messages:", error);
+        }
+
+        // 2. Services ගේනවා
+        try {
             const srvRes = await axios.get("http://localhost:8080/api/admin/services");
             setServices(srvRes.data);
+        } catch (error) {
+            console.error("Error fetching services:", error);
+        }
 
+        // 3. Projects ගේනවා
+        try {
             const prjRes = await axios.get("http://localhost:8080/api/admin/projects");
             setProjects(prjRes.data);
+        } catch (error) {
+            console.error("Error fetching projects:", error);
+        }
 
+        // 4. Users ගේනවා
+        try {
             const usrRes = await axios.get("http://localhost:8080/api/admin/users");
             setUsers(usrRes.data);
-        } catch (error) { 
-            console.error("Error fetching data", error);
-            // Backend එකෙන් Error ආවොත් (403 Forbidden වගේ)
-            if(error.response && error.response.status === 403) {
-                alert("Session Expired or Access Denied");
-                navigate('/login');
-            }
+        } catch (error) {
+            console.error("Error fetching users:", error);
         }
     };
 
-    // --- DELETE FUNCTIONS ---
     const deleteItem = async (url, id, setData, data) => {
         if(window.confirm("Are you sure?")) {
             try {
@@ -94,10 +105,10 @@ const AdminDashboard = () => {
 
     // --- UI COMPONENTS ---
     return (
-        <div className="home-container" style={{ paddingTop: '100px', minHeight: '100vh', display: 'flex' }}>
+        <div className="admin-container" style={{ paddingTop: '100px', minHeight: '100vh', display: 'flex' }}>
             
             {/* SIDEBAR */}
-            <div style={{ width: '250px', background: '#1e293b', padding: '20px', minHeight: '80vh', borderRight: '1px solid #334155' }}>
+            <div style={{ width: '250px', background: '#ffffff', padding: '20px', minHeight: '80vh', borderRight: '1px solid #e2e8f0' }}>
                 <h3 style={{ color: '#a855f7', marginBottom: '30px' }}>Admin Panel</h3>
                 <ul style={{ listStyle: 'none', padding: 0 }}>
                     <li onClick={() => setActiveTab('messages')} style={tabStyle(activeTab === 'messages')}><MessageSquare size={18}/> Messages</li>
@@ -179,7 +190,7 @@ const AdminDashboard = () => {
                         {users.map(usr => (
                             <div key={usr.id} className="admin-card">
                                 <div><h4>{usr.fullName}</h4><p>{usr.email}</p></div>
-                                <div style={{background: usr.role === 'ADMIN' ? '#a855f7' : '#334155', padding: '5px 10px', borderRadius: '5px', fontSize: '0.8rem'}}>
+                                <div style={{background: usr.role === 'ADMIN' ? '#a855f7' : '#e2e8f0', color: usr.role === 'ADMIN' ? 'white' : 'black', padding: '5px 10px', borderRadius: '5px', fontSize: '0.8rem'}}>
                                     {usr.role || 'USER'}
                                 </div>
                             </div>
@@ -194,7 +205,7 @@ const AdminDashboard = () => {
 
 // Simple Styles for this component
 const tabStyle = (isActive) => ({
-    padding: '15px', cursor: 'pointer', color: isActive ? 'white' : '#94a3b8',
+    padding: '15px', cursor: 'pointer', color: isActive ? 'white' : '#64748b',
     background: isActive ? '#a855f7' : 'transparent', borderRadius: '8px',
     marginBottom: '10px', display: 'flex', gap: '10px', alignItems: 'center', fontWeight: 'bold'
 });

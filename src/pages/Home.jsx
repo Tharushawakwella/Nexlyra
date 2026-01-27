@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Home.css';
-import axios from 'axios'; // 1. Axios import කළා
+import axios from 'axios';
 import { 
     Layout, Server, Database, LineChart, Code, ShieldCheck, 
     ExternalLink, Github, Mail, Phone, MapPin, Send 
@@ -11,23 +11,65 @@ const Home = () => {
     const navigate = useNavigate();
     const [ripples, setRipples] = useState([]);
 
-    // 2. Contact Form එකේ Data තියාගන්න State එකක්
-    const [contactData, setContactData] = useState({
-        name: '',
-        email: '',
-        message: ''
-    });
+    // --- 1. DEFAULT DATA (Backend එක හිස් නම් පෙන්වන්න) ---
+    const defaultServices = [
+        { iconName: "Layout", title: "Full-Stack Web Apps", description: "Building powerful web applications like 'Vehix' using React and Spring Boot." },
+        { iconName: "Server", title: "Enterprise Backend", description: "Scalable backend systems designed with Java Spring Boot for secure data management." },
+        { iconName: "LineChart", title: "Data Science", description: "Transforming raw data into actionable insights with predictive modeling and analysis." },
+        { iconName: "Database", title: "Database Architecture", description: "Optimized SQL/NoSQL database design for secure and fast data retrieval." },
+        { iconName: "Code", title: "API Development", description: "Fast RESTful APIs to connect mobile apps and third-party services." },
+        { iconName: "ShieldCheck", title: "System Security", description: "Implementing JWT auth and RBAC to keep your enterprise apps safe." }
+    ];
 
-    // Input වෙනස් වෙද්දී State එක Update කිරීම
+    const defaultProjects = [
+        { title: "Vehix - Service System", category: "Full Stack Development", imageUrl: "https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?auto=format&fit=crop&q=80&w=600", description: "A comprehensive vehicle service management platform built with React and Spring Boot." },
+        { title: "E-Commerce Analytics", category: "Data Science", imageUrl: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=600", description: "An intelligent dashboard for dropshipping businesses to analyze sales trends." },
+        { title: "AI Terminal Companion", category: "Artificial Intelligence", imageUrl: "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?auto=format&fit=crop&q=80&w=600", description: "A Linux-based terminal assistant leveraging local LLMs (Ollama)." }
+    ];
+
+    // --- 2. STATES (දැන් අපි Data තියාගන්නේ State වල) ---
+    const [services, setServices] = useState(defaultServices);
+    const [projects, setProjects] = useState(defaultProjects);
+
+    // Contact Form State
+    const [contactData, setContactData] = useState({ name: '', email: '', message: '' });
+
+    // --- 3. DATA FETCHING (Backend එකෙන් දත්ත ගැනීම) ---
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                // Services ගේනවා
+                const srvRes = await axios.get("http://localhost:8080/api/admin/services");
+                if (srvRes.data.length > 0) {
+                    setServices(srvRes.data); // Database එකේ තිබුණොත් විතරක් Update කරනවා
+                }
+
+                // Projects ගේනවා
+                const prjRes = await axios.get("http://localhost:8080/api/admin/projects");
+                if (prjRes.data.length > 0) {
+                    setProjects(prjRes.data);
+                }
+            } catch (error) {
+                console.log("Using default data (Backend might be offline or empty).");
+            }
+        };
+        fetchData();
+    }, []);
+
+    // --- HELPER: ICON MAPPER (Database එකෙන් එන නම Icon එකට හරවන්න) ---
+    const getIcon = (iconName) => {
+        const icons = { Layout, Server, Database, LineChart, Code, ShieldCheck };
+        const IconComponent = icons[iconName] || Layout; // Default Icon
+        return <IconComponent size={30} />;
+    };
+
+    // --- CONTACT FORM LOGIC ---
     const handleContactChange = (e) => {
         setContactData({ ...contactData, [e.target.name]: e.target.value });
     };
 
-    // 3. Message එක යවන Function එක
     const handleSendMessage = async (e) => {
         e.preventDefault();
-        
-        // Log වෙලාද බලනවා (ආරක්ෂාවට)
         const isLoggedIn = localStorage.getItem('isAuthenticated');
         if (isLoggedIn !== 'true') {
             alert("Please Sign In to send a message.");
@@ -36,38 +78,14 @@ const Home = () => {
         }
 
         try {
-            // Backend එකට යවනවා
-            const response = await axios.post("http://localhost:8080/api/contact/send", contactData);
-            alert(response.data); // "Message Sent Successfully!"
-            
-            // Form එක හිස් කරනවා
+            await axios.post("http://localhost:8080/api/contact/send", contactData);
+            alert("Message Sent Successfully!");
             setContactData({ name: '', email: '', message: '' });
-
         } catch (error) {
             console.error("Error sending message:", error);
             alert("Failed to send message. Please try again.");
         }
     };
-
-    // ... (Services List, Projects List, CreateRipple Function පරණ විදිහමයි - වෙනසක් නෑ) ...
-    // ... (Service List & Projects List Code here) ...
-    
-    // මම කෙලින්ම Contact Form එක තියෙන තැනට යන්නම්, අනිත් ඒවා එහෙමම තියන්න.
-
-    const servicesList = [
-        { icon: <Layout size={30} />, title: "Full-Stack Web Apps", description: "Building powerful web applications like 'Vehix' using React and Spring Boot." },
-        { icon: <Server size={30} />, title: "Enterprise Backend", description: "Scalable backend systems designed with Java Spring Boot for secure data management." },
-        { icon: <LineChart size={30} />, title: "Data Science", description: "Transforming raw data into actionable insights with predictive modeling and analysis." },
-        { icon: <Database size={30} />, title: "Database Architecture", description: "Optimized SQL/NoSQL database design for secure and fast data retrieval." },
-        { icon: <Code size={30} />, title: "API Development", description: "Fast RESTful APIs to connect mobile apps and third-party services." },
-        { icon: <ShieldCheck size={30} />, title: "System Security", description: "Implementing JWT auth and RBAC to keep your enterprise apps safe." }
-    ];
-
-    const projects = [
-        { title: "Vehix - Service System", category: "Full Stack Development", image: "https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?auto=format&fit=crop&q=80&w=600", description: "A comprehensive vehicle service management platform built with React and Spring Boot. Features appointment scheduling and admin dashboards." },
-        { title: "E-Commerce Analytics", category: "Data Science", image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=600", description: "An intelligent dashboard for dropshipping businesses to analyze sales trends and optimize inventory using Python & R." },
-        { title: "AI Terminal Companion", category: "Artificial Intelligence", image: "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?auto=format&fit=crop&q=80&w=600", description: "A Linux-based terminal assistant leveraging local LLMs (Ollama) to automate shell scripting and system tasks." }
-    ];
 
     const handleContactClick = () => {
         const isLoggedIn = localStorage.getItem('isAuthenticated');
@@ -89,11 +107,10 @@ const Home = () => {
         setTimeout(() => setRipples(prev => prev.filter(r => r.id !== newRipple.id)), 800);
     };
 
-
     return (
         <div className="home-container" onClick={createRipple}>
             
-            {/* HERO SECTION */}
+            {/* HERO SECTION (කිසිම වෙනසක් නෑ) */}
             <header className="hero-section" id="home">
                 <div className="hero-content">
                     <h1 className="hero-title">Premium Web <br/> Engineering & <br/> <span style={{color: '#a855f7'}}>Data Insights.</span></h1>
@@ -109,7 +126,7 @@ const Home = () => {
                 </div>
             </header>
 
-            {/* ABOUT SECTION */}
+            {/* ABOUT SECTION (කිසිම වෙනසක් නෑ) */}
             <section className="section about-section" id="about">
                 <div className="about-content">
                     <div className="about-text">
@@ -125,13 +142,17 @@ const Home = () => {
                 </div>
             </section>
 
-            {/* SERVICES SECTION */}
+            {/* SERVICES SECTION (DYNAMIC කළා) */}
             <section className="section services-section" id="services">
                 <div className="section-header"><h2>Our <span style={{color: '#ec4899'}}>Services</span></h2><p>Comprehensive digital solutions tailored to elevate your business.</p></div>
                 <div className="services-grid">
-                    {servicesList.map((service, index) => (
-                        <div className="service-card" key={index}>
-                            <div className="icon-box">{service.icon}</div>
+                    {/* මෙතන දැන් services State එක Map කරනවා */}
+                    {services.map((service, index) => (
+                        <div className="service-card" key={service.id || index}>
+                            {/* Icon එක Backend එකෙන් එන නමට අනුව ගන්නවා */}
+                            <div className="icon-box">
+                                {service.icon || getIcon(service.iconName)}
+                            </div>
                             <h3>{service.title}</h3>
                             <p>{service.description}</p>
                         </div>
@@ -139,13 +160,15 @@ const Home = () => {
                 </div>
             </section>
 
-            {/* PORTFOLIO SECTION */}
+            {/* PORTFOLIO SECTION (DYNAMIC කළා) */}
             <section className="section portfolio-section" id="portfolio">
                 <div className="section-header"><h2>Featured <span style={{color: '#a855f7'}}>Projects</span></h2><p>A glimpse into our recent technical endeavors.</p></div>
                 <div className="portfolio-grid">
+                    {/* මෙතන දැන් projects State එක Map කරනවා */}
                     {projects.map((project, index) => (
-                        <div className="project-card" key={index}>
-                            <div className="project-image" style={{backgroundImage: `url(${project.image})`}}></div>
+                        <div className="project-card" key={project.id || index}>
+                            {/* Backend එකේ තියෙන්නේ imageUrl, Frontend එකේ image. දෙකම වැඩ කරන විදිහට දැම්මා */}
+                            <div className="project-image" style={{backgroundImage: `url(${project.imageUrl || project.image})`}}></div>
                             <div className="project-info">
                                 <span className="category">{project.category}</span>
                                 <h3>{project.title}</h3>
@@ -160,7 +183,7 @@ const Home = () => {
                 </div>
             </section>
 
-            {/* --- 5. CONTACT SECTION (මෙතන තමයි වෙනස් කළේ) --- */}
+            {/* CONTACT SECTION (මේක ඔයා කලින් එවපු විදිහමයි) */}
             <section className="section contact-section" id="contact">
                 <div className="contact-wrapper">
                     <div className="contact-info">
@@ -171,40 +194,18 @@ const Home = () => {
                         <div className="info-item"><MapPin className="c-icon" /> <span>Colombo, Sri Lanka</span></div>
                     </div>
 
-                    {/* Form එක Update කළා */}
                     <form className="contact-form" onSubmit={handleSendMessage}>
                         <div className="form-group">
                             <label>Your Name</label>
-                            <input 
-                                type="text" 
-                                name="name" 
-                                placeholder="John Doe" 
-                                value={contactData.name} 
-                                onChange={handleContactChange} 
-                                required 
-                            />
+                            <input type="text" name="name" placeholder="John Doe" value={contactData.name} onChange={handleContactChange} required />
                         </div>
                         <div className="form-group">
                             <label>Email Address</label>
-                            <input 
-                                type="email" 
-                                name="email" 
-                                placeholder="john@example.com" 
-                                value={contactData.email} 
-                                onChange={handleContactChange} 
-                                required 
-                            />
+                            <input type="email" name="email" placeholder="john@example.com" value={contactData.email} onChange={handleContactChange} required />
                         </div>
                         <div className="form-group">
                             <label>Message</label>
-                            <textarea 
-                                name="message" 
-                                rows="4" 
-                                placeholder="Tell us about your project..." 
-                                value={contactData.message} 
-                                onChange={handleContactChange} 
-                                required
-                            ></textarea>
+                            <textarea name="message" rows="4" placeholder="Tell us about your project..." value={contactData.message} onChange={handleContactChange} required ></textarea>
                         </div>
                         <button type="submit" className="btn-submit"><Send size={18}/> Send Message</button>
                     </form>
