@@ -11,7 +11,7 @@ const Home = () => {
     const navigate = useNavigate();
     const [ripples, setRipples] = useState([]);
 
-    // --- 1. DEFAULT DATA  ---
+    // --- 1. DEFAULT DATA ---
     const defaultServices = [
         { iconName: "Layout", title: "Full-Stack Web Apps", description: "Building powerful web applications like 'Vehix' using React and Spring Boot." },
         { iconName: "Server", title: "Enterprise Backend", description: "Scalable backend systems designed with Java Spring Boot for secure data management." },
@@ -27,9 +27,12 @@ const Home = () => {
         { title: "AI Terminal Companion", category: "Artificial Intelligence", imageUrl: "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?auto=format&fit=crop&q=80&w=600", description: "A Linux-based terminal assistant leveraging local LLMs (Ollama)." }
     ];
 
-    // --- 2. STATES  ---
+    // --- 2. STATES ---
     const [services, setServices] = useState(defaultServices);
     const [projects, setProjects] = useState(defaultProjects);
+    
+    // --- NEW: Footer State (අලුතින් එකතු කළා) ---
+    const [footerText, setFooterText] = useState("© 2026 Nexlyra Digital. All rights reserved.");
 
     // Contact Form State
     const [contactData, setContactData] = useState({ name: '', email: '', message: '' });
@@ -41,7 +44,7 @@ const Home = () => {
                 // Services 
                 const srvRes = await axios.get("https://nexlyra.onrender.com/api/admin/services");
                 if (srvRes.data.length > 0) {
-                    setServices(srvRes.data); // Database Update 
+                    setServices(srvRes.data); 
                 }
 
                 // Projects 
@@ -49,6 +52,13 @@ const Home = () => {
                 if (prjRes.data.length > 0) {
                     setProjects(prjRes.data);
                 }
+
+                // --- NEW: Fetch Footer Data (අලුතින් එකතු කළා) ---
+                const footRes = await axios.get("https://nexlyra.onrender.com/api/footer/get");
+                if (footRes.data && footRes.data.text) {
+                    setFooterText(footRes.data.text);
+                }
+
             } catch (error) {
                 console.log("Using default data (Backend might be offline or empty).");
             }
@@ -56,7 +66,7 @@ const Home = () => {
         fetchData();
     }, []);
 
-    // --- HELPER: ICON MAPPER  ---
+    // --- HELPER: ICON MAPPER ---
     const getIcon = (iconName) => {
         const icons = { Layout, Server, Database, LineChart, Code, ShieldCheck };
         const IconComponent = icons[iconName] || Layout; // Default Icon
@@ -110,7 +120,7 @@ const Home = () => {
     return (
         <div className="home-container" onClick={createRipple}>
             
-            {/* HERO SECTION  */}
+            {/* HERO SECTION */}
             <header className="hero-section" id="home">
                 <div className="hero-content">
                     <h1 className="hero-title">Premium Web <br/> Engineering & <br/> <span style={{color: '#a855f7'}}>Data Insights.</span></h1>
@@ -142,14 +152,12 @@ const Home = () => {
                 </div>
             </section>
 
-            {/* SERVICES SECTION (DYNAMIC ) */}
+            {/* SERVICES SECTION */}
             <section className="section services-section" id="services">
                 <div className="section-header"><h2>Our <span style={{color: '#ec4899'}}>Services</span></h2><p>Comprehensive digital solutions tailored to elevate your business.</p></div>
                 <div className="services-grid">
-                    {/*  services State  Map  */}
                     {services.map((service, index) => (
                         <div className="service-card" key={service.id || index}>
-                            {/* Icon Backend */}
                             <div className="icon-box">
                                 {service.icon || getIcon(service.iconName)}
                             </div>
@@ -160,14 +168,12 @@ const Home = () => {
                 </div>
             </section>
 
-            {/* PORTFOLIO SECTION (DYNAMIC ) */}
+            {/* PORTFOLIO SECTION */}
             <section className="section portfolio-section" id="portfolio">
                 <div className="section-header"><h2>Featured <span style={{color: '#a855f7'}}>Projects</span></h2><p>A glimpse into our recent technical endeavors.</p></div>
                 <div className="portfolio-grid">
-                    {/*  projects State Map */}
                     {projects.map((project, index) => (
                         <div className="project-card" key={project.id || index}>
-                            {/* Backend  imageUrl, Frontend image.*/}
                             <div className="project-image" style={{backgroundImage: `url(${project.imageUrl || project.image})`}}></div>
                             <div className="project-info">
                                 <span className="category">{project.category}</span>
@@ -183,7 +189,7 @@ const Home = () => {
                 </div>
             </section>
 
-            {/* CONTACT SECTION  */}
+            {/* CONTACT SECTION */}
             <section className="section contact-section" id="contact">
                 <div className="contact-wrapper">
                     <div className="contact-info">
@@ -211,6 +217,11 @@ const Home = () => {
                     </form>
                 </div>
             </section>
+
+            {/* --- NEW: DYNAMIC FOOTER (අලුතින් එකතු කළා) --- */}
+            <footer style={{textAlign: 'center', padding: '20px', background: '#0f172a', color: '#94a3b8', borderTop: '1px solid #1e293b'}}>
+                <p>{footerText}</p>
+            </footer>
 
             {ripples.map((ripple) => (
                 <span key={ripple.id} className="ripple-effect" style={{ left: ripple.x, top: ripple.y }}></span>

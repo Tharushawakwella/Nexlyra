@@ -1,18 +1,21 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Trash2, User, Layout, Briefcase, MessageSquare, Plus } from 'lucide-react';
+import { Trash2, User, Layout, Briefcase, MessageSquare, Plus, Edit3 } from 'lucide-react'; // Edit3 එකතු කළා
 import { useNavigate } from 'react-router-dom';
 import './AdminDashboard.css';
 
 const AdminDashboard = () => {
     const navigate = useNavigate();
-    const [activeTab, setActiveTab] = useState('messages'); // Tabs: messages, services, projects, users
+    const [activeTab, setActiveTab] = useState('messages'); // Tabs: messages, services, projects, users, footer
 
     // Data States
     const [messages, setMessages] = useState([]);
     const [services, setServices] = useState([]);
     const [projects, setProjects] = useState([]);
     const [users, setUsers] = useState([]);
+    
+    // --- NEW: Footer State (අලුතින් එකතු කළා) ---
+    const [footerText, setFooterText] = useState('');
 
     // Form States
     const [newService, setNewService] = useState({ title: '', description: '', iconName: 'Layout' });
@@ -31,40 +34,39 @@ const AdminDashboard = () => {
         }
     }, [navigate]);
 
-    // --- UPDATED DATA FETCHING (වැදගත්ම වෙනස මෙතන) ---
-    // එක API එකක් ෆේල් වුණත් අනිත් ඒවා ලෝඩ් වෙන විදිහට හැදුවා
+    // --- UPDATED DATA FETCHING ---
     const fetchAllData = async () => {
-        // 1. Messages ගේනවා
+        // 1. Messages
         try {
             const msgRes = await axios.get("https://nexlyra.onrender.com/api/contact/all");
             setMessages(msgRes.data);
-        } catch (error) {
-            console.error("Error fetching messages:", error);
-        }
+        } catch (error) { console.error("Error fetching messages:", error); }
 
-        // 2. Services ගේනවා
+        // 2. Services
         try {
             const srvRes = await axios.get("https://nexlyra.onrender.com/api/admin/services");
             setServices(srvRes.data);
-        } catch (error) {
-            console.error("Error fetching services:", error);
-        }
+        } catch (error) { console.error("Error fetching services:", error); }
 
-        // 3. Projects ගේනවා
+        // 3. Projects
         try {
             const prjRes = await axios.get("https://nexlyra.onrender.com/api/admin/projects");
             setProjects(prjRes.data);
-        } catch (error) {
-            console.error("Error fetching projects:", error);
-        }
+        } catch (error) { console.error("Error fetching projects:", error); }
 
-        // 4. Users ගේනවා
+        // 4. Users
         try {
             const usrRes = await axios.get("https://nexlyra.onrender.com/api/admin/users");
             setUsers(usrRes.data);
-        } catch (error) {
-            console.error("Error fetching users:", error);
-        }
+        } catch (error) { console.error("Error fetching users:", error); }
+
+        // 5. Footer Data (අලුතින් එකතු කළා)
+        try {
+            const footRes = await axios.get("https://nexlyra.onrender.com/api/footer/get");
+            if (footRes.data && footRes.data.text) {
+                setFooterText(footRes.data.text);
+            }
+        } catch (error) { console.error("Error fetching footer:", error); }
     };
 
     const deleteItem = async (url, id, setData, data) => {
@@ -72,9 +74,7 @@ const AdminDashboard = () => {
             try {
                 await axios.delete(url + id);
                 setData(data.filter(item => item.id !== id));
-            } catch (error) {
-                alert("Error deleting item");
-            }
+            } catch (error) { alert("Error deleting item"); }
         }
     };
 
@@ -86,9 +86,7 @@ const AdminDashboard = () => {
             setServices([...services, res.data]);
             setNewService({ title: '', description: '', iconName: 'Layout' });
             alert("Service Added!");
-        } catch (error) {
-            alert("Error adding service");
-        }
+        } catch (error) { alert("Error adding service"); }
     };
 
     const handleAddProject = async (e) => {
@@ -98,8 +96,17 @@ const AdminDashboard = () => {
             setProjects([...projects, res.data]);
             setNewProject({ title: '', category: '', description: '', imageUrl: '' });
             alert("Project Added!");
+        } catch (error) { alert("Error adding project"); }
+    };
+
+    // --- NEW: Footer Update Function (අලුතින් එකතු කළා) ---
+    const handleUpdateFooter = async (e) => {
+        e.preventDefault();
+        try {
+            await axios.post("https://nexlyra.onrender.com/api/footer/update", { text: footerText });
+            alert("Footer Updated Successfully!");
         } catch (error) {
-            alert("Error adding project");
+            alert("Error updating footer");
         }
     };
 
@@ -115,6 +122,8 @@ const AdminDashboard = () => {
                     <li onClick={() => setActiveTab('services')} style={tabStyle(activeTab === 'services')}><Layout size={18}/> Services</li>
                     <li onClick={() => setActiveTab('projects')} style={tabStyle(activeTab === 'projects')}><Briefcase size={18}/> Projects</li>
                     <li onClick={() => setActiveTab('users')} style={tabStyle(activeTab === 'users')}><User size={18}/> Users</li>
+                    {/* Footer Tab එකතු කළා */}
+                    <li onClick={() => setActiveTab('footer')} style={tabStyle(activeTab === 'footer')}><Edit3 size={18}/> Footer Settings</li>
                 </ul>
             </div>
 
@@ -195,6 +204,29 @@ const AdminDashboard = () => {
                                 </div>
                             </div>
                         ))}
+                    </div>
+                )}
+
+                {/* 5. FOOTER TAB (අලුතින් එකතු කළා) */}
+                {activeTab === 'footer' && (
+                    <div>
+                        <h2>Manage Footer</h2>
+                        <div className="admin-form" style={{flexDirection: 'column'}}>
+                            <label style={{marginBottom: '10px', fontWeight: 'bold'}}>Footer Content</label>
+                            <input 
+                                type="text" 
+                                value={footerText} 
+                                onChange={(e) => setFooterText(e.target.value)} 
+                                style={{width: '100%', padding: '15px', marginBottom: '15px'}}
+                                placeholder="e.g. © 2026 Nexlyra Digital. All rights reserved."
+                            />
+                            <button onClick={handleUpdateFooter} className="btn-add" style={{width: 'fit-content'}}>
+                                Update Footer
+                            </button>
+                        </div>
+                        <div className="admin-card">
+                            <p style={{color: '#64748b'}}><strong>Current Preview:</strong> {footerText}</p>
+                        </div>
                     </div>
                 )}
 
