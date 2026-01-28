@@ -31,8 +31,15 @@ const Home = () => {
     const [services, setServices] = useState(defaultServices);
     const [projects, setProjects] = useState(defaultProjects);
     
-    // --- NEW: Footer State (අලුතින් එකතු කළා) ---
+    // Footer State
     const [footerText, setFooterText] = useState("© 2026 Nexlyra Digital. All rights reserved.");
+
+    // --- NEW: Contact Info State (අලුතින් එකතු කළා) ---
+    const [siteContact, setSiteContact] = useState({
+        email: 'hello@nexlyra.com',
+        phone: '+94 77 123 4567',
+        address: 'Colombo, Sri Lanka'
+    });
 
     // Contact Form State
     const [contactData, setContactData] = useState({ name: '', email: '', message: '' });
@@ -41,22 +48,22 @@ const Home = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                // Services 
+                // 1. Services 
                 const srvRes = await axios.get("https://nexlyra.onrender.com/api/admin/services");
-                if (srvRes.data.length > 0) {
-                    setServices(srvRes.data); 
-                }
+                if (srvRes.data.length > 0) setServices(srvRes.data); 
 
-                // Projects 
+                // 2. Projects 
                 const prjRes = await axios.get("https://nexlyra.onrender.com/api/admin/projects");
-                if (prjRes.data.length > 0) {
-                    setProjects(prjRes.data);
-                }
+                if (prjRes.data.length > 0) setProjects(prjRes.data); 
 
-                // --- NEW: Fetch Footer Data (අලුතින් එකතු කළා) ---
+                // 3. Footer Data
                 const footRes = await axios.get("https://nexlyra.onrender.com/api/footer/get");
-                if (footRes.data && footRes.data.text) {
-                    setFooterText(footRes.data.text);
+                if (footRes.data && footRes.data.text) setFooterText(footRes.data.text);
+
+                // 4. Contact Info Data (අලුතින් එකතු කළා)
+                const infoRes = await axios.get("https://nexlyra.onrender.com/api/contact-info/get");
+                if (infoRes.data && infoRes.data.email) {
+                    setSiteContact(infoRes.data);
                 }
 
             } catch (error) {
@@ -69,7 +76,7 @@ const Home = () => {
     // --- HELPER: ICON MAPPER ---
     const getIcon = (iconName) => {
         const icons = { Layout, Server, Database, LineChart, Code, ShieldCheck };
-        const IconComponent = icons[iconName] || Layout; // Default Icon
+        const IconComponent = icons[iconName] || Layout; 
         return <IconComponent size={30} />;
     };
 
@@ -195,9 +202,11 @@ const Home = () => {
                     <div className="contact-info">
                         <h2>Let's Build Something <br/> <span style={{color: '#ec4899'}}>Great Together.</span></h2>
                         <p>Have a project in mind? Reach out to us for a consultation.</p>
-                        <div className="info-item"><Mail className="c-icon" /> <span>hello@nexlyra.com</span></div>
-                        <div className="info-item"><Phone className="c-icon" /> <span>+94 77 123 4567</span></div>
-                        <div className="info-item"><MapPin className="c-icon" /> <span>Colombo, Sri Lanka</span></div>
+                        
+                        {/* --- DYNAMIC CONTACT INFO (Updated Here) --- */}
+                        <div className="info-item"><Mail className="c-icon" /> <span>{siteContact.email}</span></div>
+                        <div className="info-item"><Phone className="c-icon" /> <span>{siteContact.phone}</span></div>
+                        <div className="info-item"><MapPin className="c-icon" /> <span>{siteContact.address}</span></div>
                     </div>
 
                     <form className="contact-form" onSubmit={handleSendMessage}>
@@ -218,7 +227,7 @@ const Home = () => {
                 </div>
             </section>
 
-            {/* --- NEW: DYNAMIC FOOTER (අලුතින් එකතු කළා) --- */}
+            {/* DYNAMIC FOOTER */}
             <footer style={{textAlign: 'center', padding: '20px', background: '#0f172a', color: '#94a3b8', borderTop: '1px solid #1e293b'}}>
                 <p>{footerText}</p>
             </footer>
