@@ -36,7 +36,7 @@ const AdminDashboard = () => {
     const fetchAllData = async () => {
         // 1. Messages ගේනවා
         try {
-            const msgRes = await axios.get("http://localhost:8080/api/contact/all");
+            const msgRes = await axios.get("https://nexlyra.onrender.com/api/contact/all");
             setMessages(msgRes.data);
         } catch (error) {
             console.error("Error fetching messages:", error);
@@ -44,7 +44,7 @@ const AdminDashboard = () => {
 
         // 2. Services ගේනවා
         try {
-            const srvRes = await axios.get("http://localhost:8080/api/admin/services");
+            const srvRes = await axios.get("https://nexlyra.onrender.com/api/admin/services");
             setServices(srvRes.data);
         } catch (error) {
             console.error("Error fetching services:", error);
@@ -52,7 +52,7 @@ const AdminDashboard = () => {
 
         // 3. Projects ගේනවා
         try {
-            const prjRes = await axios.get("http://localhost:8080/api/admin/projects");
+            const prjRes = await axios.get("https://nexlyra.onrender.com/api/admin/projects");
             setProjects(prjRes.data);
         } catch (error) {
             console.error("Error fetching projects:", error);
@@ -60,7 +60,7 @@ const AdminDashboard = () => {
 
         // 4. Users ගේනවා
         try {
-            const usrRes = await axios.get("http://localhost:8080/api/admin/users");
+            const usrRes = await axios.get("https://nexlyra.onrender.com/api/admin/users");
             setUsers(usrRes.data);
         } catch (error) {
             console.error("Error fetching users:", error);
@@ -82,7 +82,7 @@ const AdminDashboard = () => {
     const handleAddService = async (e) => {
         e.preventDefault();
         try {
-            const res = await axios.post("http://localhost:8080/api/admin/services/add", newService);
+            const res = await axios.post("https://nexlyra.onrender.com/api/admin/services/add", newService);
             setServices([...services, res.data]);
             setNewService({ title: '', description: '', iconName: 'Layout' });
             alert("Service Added!");
@@ -94,7 +94,7 @@ const AdminDashboard = () => {
     const handleAddProject = async (e) => {
         e.preventDefault();
         try {
-            const res = await axios.post("http://localhost:8080/api/admin/projects/add", newProject);
+            const res = await axios.post("https://nexlyra.onrender.com/api/admin/projects/add", newProject);
             setProjects([...projects, res.data]);
             setNewProject({ title: '', category: '', description: '', imageUrl: '' });
             alert("Project Added!");
@@ -132,7 +132,7 @@ const AdminDashboard = () => {
                                         <h4>{msg.name} <span style={{fontSize:'0.8rem', color:'#94a3b8'}}>({msg.email})</span></h4>
                                         <p>{msg.message}</p>
                                     </div>
-                                    <button onClick={() => deleteItem("http://localhost:8080/api/contact/delete/", msg.id, setMessages, messages)} className="btn-delete"><Trash2 size={18}/></button>
+                                    <button onClick={() => deleteItem("https://nexlyra.onrender.com/api/contact/delete/", msg.id, setMessages, messages)} className="btn-delete"><Trash2 size={18}/></button>
                                 </div>
                             ))
                         }
@@ -153,7 +153,7 @@ const AdminDashboard = () => {
                             {services.map(srv => (
                                 <div key={srv.id} className="admin-card">
                                     <div><h3>{srv.title}</h3><p>{srv.description}</p></div>
-                                    <button onClick={() => deleteItem("http://localhost:8080/api/admin/services/delete/", srv.id, setServices, services)} className="btn-delete"><Trash2 size={18}/></button>
+                                    <button onClick={() => deleteItem("https://nexlyra.onrender.com/api/admin/services/delete/", srv.id, setServices, services)} className="btn-delete"><Trash2 size={18}/></button>
                                 </div>
                             ))}
                         </div>
@@ -176,7 +176,7 @@ const AdminDashboard = () => {
                             {projects.map(prj => (
                                 <div key={prj.id} className="admin-card">
                                     <div><h3>{prj.title}</h3><span style={{color:'#ec4899'}}>{prj.category}</span></div>
-                                    <button onClick={() => deleteItem("http://localhost:8080/api/admin/projects/delete/", prj.id, setProjects, projects)} className="btn-delete"><Trash2 size={18}/></button>
+                                    <button onClick={() => deleteItem("https://nexlyra.onrender.com/api/admin/projects/delete/", prj.id, setProjects, projects)} className="btn-delete"><Trash2 size={18}/></button>
                                 </div>
                             ))}
                         </div>
